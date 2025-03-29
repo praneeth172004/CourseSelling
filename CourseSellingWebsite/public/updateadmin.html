@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Course</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 500px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Update Course</h1>
+        <div id="message"></div>
+        <input type="text" id="courseId" placeholder="Enter Course ID" required>
+        <input type="text" id="title" placeholder="Course Title">
+        <textarea id="description" placeholder="Course Description"></textarea>
+        <input type="number" id="price" placeholder="Price">
+        <input type="text" id="imageLink" placeholder="Image Link">
+        <input type="checkbox" id="published"> Published
+        <button onclick="updateCourse()">Update Course</button>
+    </div>
+
+    <script>
+        async function updateCourse() {
+            if (!token) {
+                alert('You are not authenticated. Please sign in first.');
+                return window.location.href = '/signin.html';
+            }
+
+            const courseId = document.getElementById('courseId').value;
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const price = document.getElementById('price').value;
+            const imageLink = document.getElementById('imageLink').value;
+            const published = document.getElementById('published').checked;
+
+            if (!courseId) {
+                document.getElementById('message').innerText = 'Course ID is required!';
+                return;
+            }
+
+            const courseData = { title, description, price, imageLink, published };
+
+            try {
+                const response = await fetch(`/courses/${courseId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(courseData)
+                });
+
+                const result = await response.json();
+
+                if (result.msg) {
+                    document.getElementById('message').innerText = result.msg;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('message').innerText = 'Something went wrong. Please try again.';
+            }
+        }
+    </script>
+</body>
+</html>
