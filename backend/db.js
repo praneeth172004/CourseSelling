@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
-
+const dot=require("dotenv");
+dot.config();
 mongoose
-  .connect("mongodb://127.0.0.1:27017/CourseSelling")
+  .connect(process.env.MONGO_URL)
   .then(() => {
     console.log("Mongoose Successfully Connected");
   })

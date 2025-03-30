@@ -3,6 +3,8 @@ const app = express();
 const userroutes = require("./user_auth");
 const adminroutes=require("./admin_auth");
 const cookieParser = require("cookie-parser");
+const dot=require("dotenv");
+dot.config();
 app.use(cookieParser())
 const cors=require("cors")
 app.use(express.json()); 
@@ -24,7 +26,9 @@ app.get("/logout", (req, res) => {
     return res.json({ msg: "You have successfully logged out." });
 });
 
-app.listen(3001, () => console.log("Server running on port 3001"));
+console.log(process.env.PORT);
+
+app.listen(process.env.PORT, () => console.log("Server running on port "+process.env.PORT));
 
 // const express = require("express");
 // const app = express();
